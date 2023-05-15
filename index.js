@@ -61,7 +61,7 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
 
   await axios
     .post(
-      "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+      "https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl",
       {
         ShortCode: shortCode,
         ResponseType: "Completed",
