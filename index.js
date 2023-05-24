@@ -100,22 +100,21 @@ app.post(`/confirmation`, (req, res) => {
   console.log(req)
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body",req.body)
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::::::::req.body.Body",req.body.Body)
-  if (!req.body.Body.stkCallback.CallbackMetadata) {
-    console.log(req.body.Body.stkCallback.ResultDesc);
-    res.status(200).json("ok");
-    return;
-  }
+  //if (!req.body.Body.stkCallback.CallbackMetadata) {
+   // console.log(req.body.Body.stkCallback.ResultDesc);
+    //res.status(200).json("ok");
+   // return;
+  //}
   console.log(">>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-  const amount = req.body.Body.stkCallback.CallbackMetadata.Item[0].Value;
+  const amount = req.body.TransAmount;
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>amount",amount)
-  const code = req.body.Body.stkCallback.CallbackMetadata.Item[1].Value;
+  const code = req.body.TransID;
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>code",code)
   const phone1 =
-    req.body.Body.stkCallback.CallbackMetadata.Item[4].Value.toString().substring(
-      3
+    req.body.BillRefNumber
     );
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,phone1",phone1)
-  const phone = `0${phone1}`;
+  const phone = phone1;
   // saving the transaction to db
   console.log({
     phone,
