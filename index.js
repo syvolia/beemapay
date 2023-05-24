@@ -89,7 +89,7 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
-
+// a function to send airtime
 const sendAirtime = async (req_data) => {
     console.log("testing airtime");
     console.log(req_data);
@@ -177,5 +177,4 @@ transaction
     res.status(400).json(error);
   });
 
-// Step 4 Advanta Airtime Purchase
 })})
