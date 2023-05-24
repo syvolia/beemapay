@@ -134,22 +134,21 @@ transaction
       recipient: transaction.customer_number,
       amount: transaction.amount
     };
-    sendAirtime(req_data)
-      .then((responseData) => {
-        console.log(responseData);
-        res.status(200).json("ok");
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(400).json(error);
-      });
+   sendAirtime(req_data)
+  .then((responseData) => {
+    console.log(responseData);
+    res.status(200).json("ok");
   })
-  .catch((err) => console.log(err.message));
+  .catch((error) => {
+    console.log(error);
+    res.status(400).json(error);
+  });
 
 // Step 4 Advanta Airtime Purchase
 const sendAirtime = async (req_data) => {
   console.log("testing airtime");
   console.log(req_data);
+  console.log("+++++++++++++++====>>>>",req_data);
   const recipients = [];
   var recipient = req_data;
   recipients.push(recipient);
@@ -173,7 +172,7 @@ const sendAirtime = async (req_data) => {
       }
     );
 
-    console.log(response.data);
+    console.log("+++++++++++++++++++++=====>>>:::",response.data);
     return response.data;
   } catch (err) {
     console.log(err.message);
