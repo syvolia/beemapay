@@ -167,8 +167,8 @@ console.log(recipient)
         },
       }
     )
-    .then((responce) => {
-      res.status(200).json(responce.data);
+    .then((res) => {
+      res.status(200).json(res.data);
     })
     .catch((err) => {
       console.log(err.message);
