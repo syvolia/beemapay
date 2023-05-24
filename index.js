@@ -96,19 +96,24 @@ const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
   console.log("am here testing")
   console.log(res)
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   console.log(req)
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
   if (!req.body.Body.stkCallback.CallbackMetadata) {
     console.log(req.body.Body.stkCallback.ResultDesc);
     res.status(200).json("ok");
     return;
   }
-
+  console.log(">>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
   const amount = req.body.Body.stkCallback.CallbackMetadata.Item[0].Value;
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>amount",amount)
   const code = req.body.Body.stkCallback.CallbackMetadata.Item[1].Value;
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>code",code)
   const phone1 =
     req.body.Body.stkCallback.CallbackMetadata.Item[4].Value.toString().substring(
       3
     );
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,phone1",phone1)
   const phone = `0${phone1}`;
   // saving the transaction to db
   console.log({
