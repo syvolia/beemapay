@@ -110,9 +110,8 @@ app.post(`/confirmation`, (req, res) => {
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>amount",amount)
   const code = req.body.TransID;
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>code",code)
-  const phone1 =
-    req.body.BillRefNumber
-    );
+  const phone1 = req.body.BillRefNumber;
+
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,phone1",phone1)
   const phone = phone1;
   // saving the transaction to db
