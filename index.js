@@ -54,14 +54,14 @@ const getAccessToken = async (req, res, next) => {
 
 //STEP 2 //registerUrl
 app.post("/registerUrl", getAccessToken, async (req, res) => {
-  
+
   const shortCode = process.env.MPESA_PAYBILL;
-  
+
 
   const validation = process.env.VALIDATION_URL;
   const confirmation = process.env.CONFIRMATION_URL;
 
- 
+
 
   await axios
     .post(
@@ -71,7 +71,7 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
         ResponseType: "Completed",
         ConfirmationURL: confirmation ,
         ValidationURL: validation ,
-      
+
       },
       {
         headers: {
@@ -90,7 +90,40 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
     });
 });
 
+const sendAirtime = async (req_data) => {
+    console.log("testing airtime");
+    console.log(req_data);
+    console.log("+++++++++++++++====>>>>",req_data);
+    const recipients = [];
+    var recipient = req_data;
+    recipients.push(recipient);
+    console.log(recipient);
 
+    let APP_KEY = process.env.APP_KEY;
+    let APP_TOKEN = process.env.APP_TOKEN;
+
+    try {
+      const response = await axios.post(
+        "https://quicksms.advantasms.com/api/v3/airtime/send",
+        {
+          recipients: recipients
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'App-Key': APP_KEY,
+            'App-Token': APP_TOKEN
+          },
+        }
+      );
+
+      console.log("+++++++++++++++++++++=====>>>:::",response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 //STEP 3 confirmation url
 const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
@@ -145,37 +178,4 @@ transaction
   });
 
 // Step 4 Advanta Airtime Purchase
-const sendAirtime = async (req_data) => {
-  console.log("testing airtime");
-  console.log(req_data);
-  console.log("+++++++++++++++====>>>>",req_data);
-  const recipients = [];
-  var recipient = req_data;
-  recipients.push(recipient);
-  console.log(recipient);
-
-  let APP_KEY = process.env.APP_KEY;
-  let APP_TOKEN = process.env.APP_TOKEN;
-
-  try {
-    const response = await axios.post(
-      "https://quicksms.advantasms.com/api/v3/airtime/send",
-      {
-        recipients: recipients
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'App-Key': APP_KEY,
-          'App-Token': APP_TOKEN
-        },
-      }
-    );
-
-    console.log("+++++++++++++++++++++=====>>>:::",response.data);
-    return response.data;
-  } catch (err) {
-    console.log(err.message);
-    throw err;
-  }
-}})})
+})})
