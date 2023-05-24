@@ -138,7 +138,7 @@ app.post(`/confirmation`, (req, res) => {
 });
 
 // Step 4 Advanta Airtime Purchase
-const sendAirtime = async (req_data) => {
+const sendAirtime = async (req_data,res) => {
   console.log("testing airtime");
   console.log(req_data);
   const recipients = [];
