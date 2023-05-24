@@ -138,42 +138,36 @@ app.post(`/confirmation`, (req, res) => {
 });
 
 // Step 4 Advanta Airtime Purchase
-const sendAirtime =  async (req_data) =>
-
-{
-  console.log("testing airtime")
-  console.log(req_data)
+const sendAirtime = async (req_data) => {
+  console.log("testing airtime");
+  console.log(req_data);
   const recipients = [];
   var recipient = req_data;
   recipients.push(recipient);
-console.log(recipient)
+  console.log(recipient);
 
-    let APP_KEY = process.env.APP_KEY;
-    let APP_TOKEN = process.env.APP_TOKEN;
+  let APP_KEY = process.env.APP_KEY;
+  let APP_TOKEN = process.env.APP_TOKEN;
 
-
-  await axios
-
-    .post(
+  try {
+    const response = await axios.post(
       "https://quicksms.advantasms.com/api/v3/airtime/send",
       {
         recipients: recipients
       },
       {
         headers: {
-          'Content-Type' : 'application/json',
-          'App-Key': `${APP_KEY}`,
-          'App-Token':`${APP_TOKEN}`
+          'Content-Type': 'application/json',
+          'App-Key': APP_KEY,
+          'App-Token': APP_TOKEN
         },
       }
-    )
-    .then((res) => {
-      res.status(200).json(res.data);
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(400).json(err);
-    });
+    );
 
+    res.status(200).json(response.data);
+  } catch (err) {
+    console.log(err.message);
+    // Handle the error accordingly, for example:
+    res.status(400).json({ error: err.message });
+  }
 }
-
