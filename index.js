@@ -122,23 +122,32 @@ app.post(`/confirmation`, (req, res) => {
   });
   const transaction = new Transaction();
 
-  transaction.customer_number = phone;
-  transaction.mpesa_ref = code;
-  transaction.amount = amount;
+transaction.customer_number = phone;
+transaction.mpesa_ref = code;
+transaction.amount = amount;
 
-  transaction
-    .save()
-    .then((data) => {
-      console.log({ message: "transaction saved successfully", data });
-    })
-    .catch((err) => console.log(err.message));
-    var req_data = {"recipient":transaction.customer_number,"amount":transaction.amount};
-    sendAirtime(req_data);
-  res.status(200).json("ok");
-});
+transaction
+  .save()
+  .then((data) => {
+    console.log({ message: "transaction saved successfully", data });
+    var req_data = {
+      recipient: transaction.customer_number,
+      amount: transaction.amount
+    };
+    sendAirtime(req_data)
+      .then((responseData) => {
+        console.log(responseData);
+        res.status(200).json("ok");
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
+      });
+  })
+  .catch((err) => console.log(err.message));
 
 // Step 4 Advanta Airtime Purchase
-const sendAirtime = async (req_data,res) => {
+const sendAirtime = async (req_data) => {
   console.log("testing airtime");
   console.log(req_data);
   const recipients = [];
@@ -164,10 +173,10 @@ const sendAirtime = async (req_data,res) => {
       }
     );
 
-    res.status(200).json(response.data);
+    console.log(response.data);
+    return response.data;
   } catch (err) {
     console.log(err.message);
-    // Handle the error accordingly, for example:
-    res.status(400).json({ error: err.message });
+    throw err;
   }
-}
+};
