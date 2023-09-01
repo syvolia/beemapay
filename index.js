@@ -127,7 +127,7 @@ const sendAirtime = async (req_data) => {
 //STEP 3 confirmation url
 const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
-  console.log("am here testing")
+  console.log("am testing new changes")
   console.log(res)
   console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   console.log(req)
