@@ -13,7 +13,7 @@ app.listen(port, () => {
   console.log(`app is running on localhost:${port}`);
 });
 mongoose
-  .connect(process.env.MONGO_ATLASS_URL)
+  .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
   .then(() => console.log("connected to db successfully"))
   .catch((err) => console.log(err));
 
