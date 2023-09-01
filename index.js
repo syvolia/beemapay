@@ -99,8 +99,8 @@ const sendAirtime = async (req_data) => {
     recipients.push(recipient);
     console.log(recipient);
 
-    let APP_KEY = process.env.APP_KEY;
-    let APP_TOKEN = process.env.APP_TOKEN;
+    let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
+    let APP_TOKEN ="A4oazZ3YiyDbWywHLFxW0eJfGPKoVw7i";
 
     try {
       const response = await axios.post(
