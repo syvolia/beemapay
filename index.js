@@ -100,7 +100,7 @@ const sendAirtime = async (req_data) => {
     console.log(recipient);
 
     let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
-    let APP_TOKEN ="A4oazZ3YiyDbWywHLFxW0eJfGPKoVw7i";
+    let APP_TOKEN ="2T9dyw9uA307DljBId5v8estFt0DqhbN";
 
     try {
       const response = await axios.post(
