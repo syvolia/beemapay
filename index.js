@@ -119,7 +119,8 @@ const sendAirtime = async (req_data) => {
     // const recipients = [];
     // var recipient = req_data;
     // recipients.push(recipient);
-    let amount = req_data.amount;
+    let intAmount = req_data.amount;
+    let amount = parseInt(intAmount)
     let mobileno = req_data.recipient
     console.log(amount)
     console.log(mobileno);
