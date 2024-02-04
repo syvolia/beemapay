@@ -7,14 +7,14 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Transaction = require("./models/transactionModel");
 
-const port = 8001;
+const port = process.env.PORT;
 
 app.listen(port, () => {
   console.log(`app is running on localhost:${port}`);
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("retrying again"))
+  .then(() => console.log("connected to  mongodb successfully"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
@@ -23,13 +23,13 @@ app.use(cors());
 
 
 //Testing API
-app.get('/getIntroMessage', (req, res) => res.json({message: 'Testing API BEEMAPAY!'}));
+app.get('/getIntroMessage', (req, res) => res.json({message: 'Testing to Beempay API!'}));
 
 //STEP 1 getting access token
 
 const getAccessToken = async (req, res, next) => {
-  const key = "A4oazZ3YiyDbWywHLFxW0eJfGPKoVw7i";
-  const secret = "36YRbv2OXll5Nkmh";
+  const key = process.env.MPESA_CONSUMER_KEY;
+  const secret = process.env.MPESA_CONSUMER_SECRET;
   const auth = new Buffer.from(`${key}:${secret}`).toString("base64");
 
   await axios
@@ -54,12 +54,12 @@ const getAccessToken = async (req, res, next) => {
 
 //STEP 2 //registerUrl
 app.post("/registerUrl", getAccessToken, async (req, res) => {
-  console.log("testing register");
-  const shortCode = "8889900";
+
+  const shortCode = process.env.MPESA_PAYBILL;
 
 
-  const validation = "https://plankton-app-xqfhf.ondigitalocean.app/validation";
-  const confirmation = "https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
+  const validation = process.env.VALIDATION_URL;
+  const confirmation = process.env.CONFIRMATION_URL;
 
 
 
@@ -67,10 +67,10 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
     .post(
       " https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl",
       {
-        ShortCode: "8889900",
+        ShortCode: shortCode,
         ResponseType: "Completed",
-        ConfirmationURL: "https://plankton-app-xqfhf.ondigitalocean.app/confirmation" ,
-        ValidationURL: "https://plankton-app-xqfhf.ondigitalocean.app/validation" ,
+        ConfirmationURL: confirmation ,
+        ValidationURL: validation ,
 
       },
       {
@@ -89,9 +89,11 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
+
+
 function checkKenyanCarrier(phoneNumber) {
+  console.log("testing airtime");
   // Define regular expressions for Safaricom, Airtel, and Orange
-  console.log("testing phoneNumber");
   const safaricomRegex = /^(?:\+254|254|0)((1|7)(?:(?:[0-9][0-9])|(?:[0-9][0-9][0-9]))[0-9]{6})$/;
   const airtelRegex = /^(?:254|\+254|0)?(7(?:(?:[3][0-9])|(?:5[0-6])|(8[0-9]))[0-9]{6})$/;
   const orangeRegex = /^(?:254|\+254|0)?(77[0-6][0-9]{6})$/;
@@ -107,6 +109,8 @@ function checkKenyanCarrier(phoneNumber) {
       return "Unknown Carrier";
   }
 }
+
+
 // a function to send airtime
 const sendAirtime = async (req_data) => {
     console.log("testing airtime");
@@ -130,7 +134,7 @@ const sendAirtime = async (req_data) => {
           operator: phoneCarrier,
           amount: amount,
           mobileno: mobileno,
-          key: "LqGXKsR9j5f64VWAz44iwoIPpSiBW3uXfaFUgZh9kgM"
+          key: "4uEZVILaxp267HpO1lTCTjzKWssaRh27dQlIV12Rgys"
         },
         {
           headers: {
@@ -147,7 +151,7 @@ const sendAirtime = async (req_data) => {
     }
   }
 //STEP 3 confirmation url
-const confirmation ="https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
+const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
   console.log("am testing new changes")
   console.log(res)
