@@ -89,30 +89,50 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
+function checkKenyanCarrier(phoneNumber) {
+  // Define regular expressions for Safaricom, Airtel, and Orange
+  const safaricomRegex = /^(?:\+254|254|0)((1|7)(?:(?:[0-9][0-9])|(?:[0-9][0-9][0-9]))[0-9]{6})$/;
+  const airtelRegex = /^(?:254|\+254|0)?(7(?:(?:[3][0-9])|(?:5[0-6])|(8[0-9]))[0-9]{6})$/;
+  const orangeRegex = /^(?:254|\+254|0)?(77[0-6][0-9]{6})$/;
+
+  // Test the phone number against each regex
+  if (safaricomRegex.test(phoneNumber)) {
+      return "Safaricom";
+  } else if (airtelRegex.test(phoneNumber)) {
+      return "Airtel";
+  } else if (orangeRegex.test(phoneNumber)) {
+      return "Orange";
+  } else {
+      return "Unknown Carrier";
+  }
+}
 // a function to send airtime
 const sendAirtime = async (req_data) => {
     console.log("testing airtime");
     console.log(req_data);
     console.log("+++++++++++++++====>>>>",req_data);
-    const recipients = [];
-    var recipient = req_data;
-    recipients.push(recipient);
+    // const recipients = [];
+    // var recipient = req_data;
+    // recipients.push(recipient);
+    let amount = req_data.amount;
+    let mobileno = req_data.recipient
     console.log(recipient);
-
-    let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
-    let APP_TOKEN ="2T9dyw9uA307DljBId5v8estFt0DqhbN";
+    const phoneCarrier = checkKenyanCarrier(mobileno)
+   
 
     try {
       const response = await axios.post(
-        "https://quicksms.advantasms.com/api/v3/airtime/send",
+        "https://lotuseastafrica.com:2053/v3/airtimebuypinless",
         {
-          recipients: recipients
+          username: "beema",
+          operator: phoneCarrier,
+          amount: amount,
+          mobileno: mobileno,
+          key: "4uEZVILaxp267HpO1lTCTjzKWssaRh27dQlIV12Rgys"
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'App-Key': APP_KEY,
-            'App-Token': APP_TOKEN
+            'Content-Type': 'application/json'
           },
         }
       );
