@@ -23,7 +23,7 @@ app.use(cors());
 
 
 //Testing API
-app.get('/getIntroMessage', (req, res) => res.json({message: 'Welcome to Beempay API!'}));
+app.get('/getIntroMessage', (req, res) => res.json({message: 'Testing API BEEMAPAY!'}));
 
 //STEP 1 getting access token
 
