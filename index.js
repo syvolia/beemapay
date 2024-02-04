@@ -14,7 +14,7 @@ app.listen(port, () => {
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("whats the problem honey"))
+  .then(() => console.log("retrying again"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
@@ -147,7 +147,7 @@ const sendAirtime = async (req_data) => {
     }
   }
 //STEP 3 confirmation url
-const confirmation = "https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
+const confirmation ="https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
 app.post(`/confirmation`, (req, res) => {
   console.log("am testing new changes")
   console.log(res)
