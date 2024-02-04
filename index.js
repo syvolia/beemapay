@@ -134,7 +134,7 @@ const sendAirtime = async (req_data) => {
           operator: phoneCarrier,
           amount: amount,
           mobileno: mobileno,
-          key: "4uEZVILaxp267HpO1lTCTjzKWssaRh27dQlIV12Rgys"
+          key: "LqGXKsR9j5f64VWAz44iwoIPpSiBW3uXfaFUgZh9kgM"
         },
         {
           headers: {
