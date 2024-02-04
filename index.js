@@ -14,7 +14,7 @@ app.listen(port, () => {
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("connectedddy to db successfullyjk"))
+  .then(() => console.log("db has been connected successfully"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
