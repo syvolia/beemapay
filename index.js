@@ -122,9 +122,9 @@ const sendAirtime = async (req_data) => {
     let amount = req_data.amount;
     let mobileno = req_data.recipient
     console.log(amount)
-    console.log(recipient);
+    console.log(mobileno);
     const phoneCarrier = checkKenyanCarrier(mobileno)
-   
+   console.log(phoneCarrier)
 
     try {
       const response = await axios.post(
