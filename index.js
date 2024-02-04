@@ -28,8 +28,8 @@ app.get('/getIntroMessage', (req, res) => res.json({message: 'Welcome to Beempay
 //STEP 1 getting access token
 
 const getAccessToken = async (req, res, next) => {
-  const key = process.env.MPESA_CONSUMER_KEY;
-  const secret = process.env.MPESA_CONSUMER_SECRET;
+  const key = "A4oazZ3YiyDbWywHLFxW0eJfGPKoVw7i";
+  const secret = "36YRbv2OXll5Nkmh";
   const auth = new Buffer.from(`${key}:${secret}`).toString("base64");
 
   await axios
@@ -54,12 +54,12 @@ const getAccessToken = async (req, res, next) => {
 
 //STEP 2 //registerUrl
 app.post("/registerUrl", getAccessToken, async (req, res) => {
+  console.log("testing register");
+  const shortCode = "8889900";
 
-  const shortCode = process.env.MPESA_PAYBILL;
 
-
-  const validation = process.env.VALIDATION_URL;
-  const confirmation = process.env.CONFIRMATION_URL;
+  const validation = "https://plankton-app-xqfhf.ondigitalocean.app/validation";
+  const confirmation = "https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
 
 
 
@@ -91,6 +91,7 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
 });
 function checkKenyanCarrier(phoneNumber) {
   // Define regular expressions for Safaricom, Airtel, and Orange
+  console.log("testing phoneNumber");
   const safaricomRegex = /^(?:\+254|254|0)((1|7)(?:(?:[0-9][0-9])|(?:[0-9][0-9][0-9]))[0-9]{6})$/;
   const airtelRegex = /^(?:254|\+254|0)?(7(?:(?:[3][0-9])|(?:5[0-6])|(8[0-9]))[0-9]{6})$/;
   const orangeRegex = /^(?:254|\+254|0)?(77[0-6][0-9]{6})$/;
