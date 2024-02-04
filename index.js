@@ -110,7 +110,11 @@ function checkKenyanCarrier(phoneNumber) {
   }
 }
 
-
+function generateUniqueID() {
+  const timestamp = Date.now().toString(16); // Convert current time to hexadecimal string
+  const randomStr = Math.random().toString(16).substring(2); // Generate random string
+  return `${timestamp}-${randomStr}`;
+}
 // a function to send airtime
 const sendAirtime = async (req_data) => {
     console.log("testing airtime");
@@ -125,16 +129,19 @@ const sendAirtime = async (req_data) => {
     console.log(amount)
     console.log(mobileno);
     const phoneCarrier = checkKenyanCarrier(mobileno)
+    const ref = generateUniqueID()
+    console.log(ref)
    console.log(phoneCarrier)
 
     try {
       const response = await axios.post(
-        "https://lotuseastafrica.com:2053/v3/airtimebuypinless",
+        "https://lotuseastafrica.com:2053/v3/airtimebuy",
         {
           username: "beema",
           operator: phoneCarrier,
           amount: amount,
           mobileno: mobileno,
+          ref:ref,
           key: "LqGXKsR9j5f64VWAz44iwoIPpSiBW3uXfaFUgZh9kgM"
         },
         {
