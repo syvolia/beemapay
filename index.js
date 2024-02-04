@@ -130,7 +130,7 @@ const sendAirtime = async (req_data) => {
           operator: phoneCarrier,
           amount: amount,
           mobileno: mobileno,
-          key: "4uEZVILaxp267HpO1lTCTjzKWssaRh27dQlIV12Rgys"
+          key: "LqGXKsR9j5f64VWAz44iwoIPpSiBW3uXfaFUgZh9kgM"
         },
         {
           headers: {
@@ -147,7 +147,7 @@ const sendAirtime = async (req_data) => {
     }
   }
 //STEP 3 confirmation url
-const confirmation = process.env.CONFIRMATION_URL;
+const confirmation = "https://plankton-app-xqfhf.ondigitalocean.app/confirmation";
 app.post(`/confirmation`, (req, res) => {
   console.log("am testing new changes")
   console.log(res)
