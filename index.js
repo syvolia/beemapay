@@ -7,14 +7,14 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Transaction = require("./models/transactionModel");
 
-const port = 4001;
+const port = 8001;
 
 app.listen(port, () => {
   console.log(`app is running on localhost:${port}`);
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("db has been connected successfully"))
+  .then(() => console.log("whats the problem honey"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
@@ -67,10 +67,10 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
     .post(
       " https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl",
       {
-        ShortCode: shortCode,
+        ShortCode: "8889900",
         ResponseType: "Completed",
-        ConfirmationURL: confirmation ,
-        ValidationURL: validation ,
+        ConfirmationURL: "https://plankton-app-xqfhf.ondigitalocean.app/confirmation" ,
+        ValidationURL: "https://plankton-app-xqfhf.ondigitalocean.app/validation" ,
 
       },
       {
