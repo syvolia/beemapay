@@ -7,14 +7,14 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Transaction = require("./models/transactionModel");
 
-const port = process.env.PORT;
+const port = 4001;
 
 app.listen(port, () => {
   console.log(`app is running on localhost:${port}`);
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("connected to db successfully"))
+  .then(() => console.log("connectedddy to db successfullyjk"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
