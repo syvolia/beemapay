@@ -116,6 +116,7 @@ const sendAirtime = async (req_data) => {
     // recipients.push(recipient);
     let amount = req_data.amount;
     let mobileno = req_data.recipient
+    console.log(amount)
     console.log(recipient);
     const phoneCarrier = checkKenyanCarrier(mobileno)
    
