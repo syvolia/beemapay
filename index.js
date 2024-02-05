@@ -14,16 +14,15 @@ app.listen(port, () => {
 });
 mongoose
   .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
-  .then(() => console.log("connected to  mongodb successfully"))
+  .then(() => console.log("connected to db successfully"))
   .catch((err) => console.log(err));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-
 //Testing API
-app.get('/getIntroMessage', (req, res) => res.json({message: 'Testing to Beempay API!'}));
+app.get('/getIntroMessage', (req, res) => res.json({message: 'Welcome to Beempay API!'}));
 
 //STEP 1 getting access token
 
@@ -57,10 +56,8 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
 
   const shortCode = process.env.MPESA_PAYBILL;
 
-
   const validation = process.env.VALIDATION_URL;
   const confirmation = process.env.CONFIRMATION_URL;
-
 
 
   await axios
@@ -90,67 +87,41 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
     });
 });
 
-
-function checkKenyanCarrier(phoneNumber) {
-  console.log("testing airtime");
-  // Define regular expressions for Safaricom, Airtel, and Orange
-  const safaricomRegex = /^(?:\+254|254|0)((1|7)(?:(?:[0-9][0-9])|(?:[0-9][0-9][0-9]))[0-9]{6})$/;
-  const airtelRegex = /^(?:254|\+254|0)?(7(?:(?:[3][0-9])|(?:5[0-6])|(8[0-9]))[0-9]{6})$/;
-  const orangeRegex = /^(?:254|\+254|0)?(77[0-6][0-9]{6})$/;
-
-  // Test the phone number against each regex
-  if (safaricomRegex.test(phoneNumber)) {
-      return "Safaricom";
-  } else if (airtelRegex.test(phoneNumber)) {
-      return "Airtel";
-  } else if (orangeRegex.test(phoneNumber)) {
-      return "Orange";
-  } else {
-      return "Unknown Carrier";
-  }
-}
-
-
 // a function to send airtime
 const sendAirtime = async (req_data) => {
-    console.log("testing airtime");
-    console.log(req_data);
-    console.log("+++++++++++++++====>>>>",req_data);
-    // const recipients = [];
-    // var recipient = req_data;
-    // recipients.push(recipient);
-    let intAmount = req_data.amount;
-    let amount = parseInt(intAmount)
-    let mobileno = req_data.recipient
-    console.log(amount)
-    console.log(mobileno);
-    const phoneCarrier = checkKenyanCarrier(mobileno)
-   console.log(phoneCarrier)
+  console.log("testing airtime");
+  console.log(req_data);
+  console.log("+++++++++++++++====>>>>",req_data);
+  const recipients = [];
+  var recipient = req_data;
+  recipients.push(recipient);
+  console.log(recipient);
 
-    try {
-      const response = await axios.post(
-        "https://lotuseastafrica.com:2053/v3/airtimebuypinless",
-        {
-          username: "beema",
-          operator: phoneCarrier,
-          amount: amount,
-          mobileno: mobileno,
-          key: "LqGXKsR9j5f64VWAz44iwoIPpSiBW3uXfaFUgZh9kgM"
+  let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
+  let APP_TOKEN ="2T9dyw9uA307DljBId5v8estFt0DqhbN";
+
+  try {
+    const response = await axios.post(
+      "https://quicksms.advantasms.com/api/v3/airtime/send",
+      {
+        recipients: recipients
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'App-Key': APP_KEY,
+          'App-Token': APP_TOKEN
         },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        }
-      );
+      }
+    );
 
-      console.log("+++++++++++++++++++++=====>>>:::",response.data);
-      return response.data;
-    } catch (err) {
-      console.log(err.message);
-      throw err;
-    }
+    console.log("+++++++++++++++++++++=====>>>:::",response.data);
+    return response.data;
+  } catch (err) {
+    console.log(err.message);
+    throw err;
   }
+}
 //STEP 3 confirmation url
 const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
@@ -205,3 +176,5 @@ transaction
   });
 
 })})
+
+
