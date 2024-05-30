@@ -86,31 +86,94 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
+const apiAuthorize = async () => {
+
+  let CONSUMERKEY ="982K90XZ95Ut0VX4k1008E11hwkvUm";
+  let CONSUMERSECRET = "FnJe8pdz81q5T7YfwZm5PJ0LnZYMf22iaSM74wIsygi8No8Q8t";
+
+
+
+  try {
+    const response = await axios.post(
+      " https://test.hallopay.co.ke/api/v2/token",
+      {
+        consumerkey: CONSUMERKEY,
+        consumersecret: CONSUMERSECRET,
+    
+      },
+   
+    );
+
+    console.log("+++++++++++++++++++++=====>>>:::",response);
+    return response;
+  } catch (err) {
+    console.log(err.message);
+    throw err;
+  }
+}
+//mobileno carrier check
+const checkCarrier = async (req_data) => {
+  console.log("testing carrier");
+  console.log(req_data);
+  console.log("+++++++++++++++====>>>>",req_data);
+  // const recipients = [];
+  var phoneNumber = req_data.recipient;
+  console.log(phoneNumber);
+
+  let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
+  let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
+  const accountSid = TWILIO_ACCOUNT_SID;
+  const authToken = TWILIO_AUTH_TOKEN;
+  const client = require('twilio')(accountSid, authToken);
+
+  client.lookups.v2.phoneNumbers(phoneNumber)
+  .fetch({ type: ['carrier'] })
+  .then(phone_number => {
+    console.log('phone_number')
+     console.log(phone_number) // All of the carrier info.
+    // console.log(phone_number.carrier.name) // Just the carrier name.
+    return phone_number.carrier.name;
+  });
+  if (phone_number.carrier.name="Safaricom") {
+    return "SAFCOM";
+} else if (phone_number.carrier.name="Airtel") {
+    return "AIRTEL";
+} else if (phone_number.carrier.name="Telkom") {
+    return "TELKOM";
+} else {
+    return "Unknown Carrier";
+}
+}
 
 // a function to send airtime
 const sendAirtime = async (req_data) => {
   console.log("testing airtime");
   console.log(req_data);
   console.log("+++++++++++++++====>>>>",req_data);
-  const recipients = [];
-  var recipient = req_data;
-  recipients.push(recipient);
-  console.log(recipient);
-
-  let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
-  let APP_TOKEN ="2T9dyw9uA307DljBId5v8estFt0DqhbN";
+  // const recipients = [];
+  var amount = req_data;
+  // recipients.push(recipient);
+  console.log(amount);
+var token = apiAuthorize();
+console.log(token)
 
   try {
     const response = await axios.post(
-      "https://quicksms.advantasms.com/api/v3/airtime/send",
+      " https://test.hallopay.co.ke/api/v2/transact",
       {
-        recipients: recipients
+        clientCode: "1003",
+        transactionID: Date.now(),
+        serviceCode: "SAFCOM",
+        accountNumber: checkCarrier(req_data),
+        amount: amount,
+        apiKey: "23dec805f3846ffe346cf475ed47ff52b1b7f4504865dc410156bdf060bbbfd8"
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          'App-Key': APP_KEY,
-          'App-Token': APP_TOKEN
+          
+          "Authorization": "bearer"+ token
+
         },
       }
     );
@@ -165,7 +228,8 @@ transaction
       recipient: transaction.customer_number,
       amount: transaction.amount
     };
-   sendAirtime(req_data)
+    sendAirtime(req_data)
+    checkCarrier(req_data)
   .then((responseData) => {
     console.log(responseData);
     res.status(200).json("ok");
