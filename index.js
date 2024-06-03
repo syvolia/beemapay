@@ -6,7 +6,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const axios = require("axios");
 const Transaction = require("./models/transactionModel");
-
+const twilio = require('twilio');
 const port = process.env.PORT;
 
 app.listen(port, () => {
@@ -86,42 +86,60 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
+
+// Twilio credentials from the console
+const accountSid = 'AC6deac11a6995240209a8b3879026d045'; // Your Account SID from www.twilio.com/console
+const authToken = '1d053b6a0111468b1aac84b9fad66177';   // Your Auth Token from www.twilio.com/console
+
 //check mobile number carrier
-const checkCarrier = async (req_data) => {
+const client = twilio(accountSid, authToken);
+async function checkCarrier(phoneNumber) {
   console.log("testing carrierrrr");
-  console.log(req_data);
-  console.log("+++++++++++++++====>>>>",req_data);
-  // const recipients = [];
-  var phoneNumber = req_data.recipient;
-  console.log(phoneNumber);
-  console.log('phoneNumber1')
-
-  let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
-  let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
-  const accountSid = TWILIO_ACCOUNT_SID;
-  const authToken = TWILIO_AUTH_TOKEN;
-  const client = require('twilio')(accountSid, authToken);
-
-  client.lookups.v2.phoneNumbers(phoneNumber)
-  console.log('phoneNumber2')
   console.log(phoneNumber)
-  .fetch({ type: ['carrier'] })
-  .then(phone_number => {
-    console.log('phone_number')
-     console.log(phone_number) // All of the carrier info.
-    // console.log(phone_number.carrier.name) // Just the carrier name.
-    return phone_number.carrier.name;
-  });
-  if (phone_number.carrier.name="Safaricom") {
-    return "SAFCOM";
-} else if (phone_number.carrier.name="Airtel") {
-    return "AIRTEL";
-} else if (phone_number.carrier.name="Telkom") {
-    return "TELKOM";
-} else {
-    return "Unknown Carrier";
+  console.log('phoneNumber1')
+  try {
+    const response = await client.lookups.v2.phoneNumbers(phoneNumber)
+      .fetch({type: 'carrier'});
+    console.log('Carrier Information:', response.carrier);
+  } catch (error) {
+    console.error('Error fetching carrier information:', error);
+  }
 }
-}
+// const checkCarrier = async (req_data) => {
+//   console.log("testing carrierrrr");
+//   console.log(req_data);
+//   console.log("+++++++++++++++====>>>>",req_data);
+//   // const recipients = [];
+//   var phoneNumber = req_data.recipient;
+//   console.log(phoneNumber);
+//   console.log('phoneNumber1')
+
+//   let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
+//   let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
+//   const accountSid = TWILIO_ACCOUNT_SID;
+//   const authToken = TWILIO_AUTH_TOKEN;
+//   const client = require('twilio')(accountSid, authToken);
+
+//   client.lookups.v2.phoneNumbers(phoneNumber)
+//   console.log('phoneNumber2')
+//   console.log(phoneNumber)
+//   .fetch({ type: ['carrier'] })
+//   .then(phone_number => {
+//     console.log('phone_number')
+//      console.log(phone_number) // All of the carrier info.
+//     // console.log(phone_number.carrier.name) // Just the carrier name.
+//     return phone_number.carrier.name;
+//   });
+//   if (phone_number.carrier.name="Safaricom") {
+//     return "SAFCOM";
+// } else if (phone_number.carrier.name="Airtel") {
+//     return "AIRTEL";
+// } else if (phone_number.carrier.name="Telkom") {
+//     return "TELKOM";
+// } else {
+//     return "Unknown Carrier";
+// }
+// }
 
 // a function to send airtime
 const sendAirtime = async (req_data) => {
@@ -201,8 +219,9 @@ transaction
       recipient: transaction.customer_number,
       amount: transaction.amount
     };
+  var phoneNumber = transaction.customer_number
    sendAirtime(req_data)
-   checkCarrier(req_data)
+   checkCarrier(phoneNumber)
   .then((responseData) => {
     console.log(responseData);
     res.status(200).json("ok");
