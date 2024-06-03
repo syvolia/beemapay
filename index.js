@@ -221,7 +221,7 @@ transaction
     };
   var phoneNumber = transaction.customer_number
    sendAirtime(req_data)
-   checkCarrier(phoneNumber)
+   checkCarrier('+254704110586')
   .then((responseData) => {
     console.log(responseData);
     res.status(200).json("ok");
