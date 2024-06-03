@@ -86,6 +86,39 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       console.log(err.message);
     });
 });
+//check mobile number carrier
+const checkCarrier = async (req_data) => {
+  console.log("testing carrierrrr");
+  console.log(req_data);
+  console.log("+++++++++++++++====>>>>",req_data);
+  // const recipients = [];
+  var phoneNumber = req_data.recipient;
+  console.log(phoneNumber);
+
+  let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
+  let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
+  const accountSid = TWILIO_ACCOUNT_SID;
+  const authToken = TWILIO_AUTH_TOKEN;
+  const client = require('twilio')(accountSid, authToken);
+
+  client.lookups.v2.phoneNumbers(phoneNumber)
+  .fetch({ type: ['carrier'] })
+  .then(phone_number => {
+    console.log('phone_number')
+     console.log(phone_number) // All of the carrier info.
+    // console.log(phone_number.carrier.name) // Just the carrier name.
+    return phone_number.carrier.name;
+  });
+  if (phone_number.carrier.name="Safaricom") {
+    return "SAFCOM";
+} else if (phone_number.carrier.name="Airtel") {
+    return "AIRTEL";
+} else if (phone_number.carrier.name="Telkom") {
+    return "TELKOM";
+} else {
+    return "Unknown Carrier";
+}
+}
 
 // a function to send airtime
 const sendAirtime = async (req_data) => {
@@ -166,6 +199,7 @@ transaction
       amount: transaction.amount
     };
    sendAirtime(req_data)
+   checkCarrier(req_data)
   .then((responseData) => {
     console.log(responseData);
     res.status(200).json("ok");
