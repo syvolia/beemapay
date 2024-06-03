@@ -88,8 +88,8 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
 });
 
 // Twilio credentials from the console
-const accountSid = 'AC6deac11a6995240209a8b3879026d045'; // Your Account SID from www.twilio.com/console
-const authToken = '1d053b6a0111468b1aac84b9fad66177';   // Your Auth Token from www.twilio.com/console
+const accountSid = 'AC68f5b71bed0a2b87d23d1fdf9a22bcf9'; // Your Account SID from www.twilio.com/console
+const authToken = '1bc973ac83f97a9032be790016a46af3';   // Your Auth Token from www.twilio.com/console
 
 //check mobile number carrier
 const client = twilio(accountSid, authToken);
