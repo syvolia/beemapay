@@ -94,6 +94,7 @@ const checkCarrier = async (req_data) => {
   // const recipients = [];
   var phoneNumber = req_data.recipient;
   console.log(phoneNumber);
+  console.log('phoneNumber1')
 
   let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
   let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
@@ -102,6 +103,8 @@ const checkCarrier = async (req_data) => {
   const client = require('twilio')(accountSid, authToken);
 
   client.lookups.v2.phoneNumbers(phoneNumber)
+  console.log('phoneNumber2')
+  console.log(phoneNumber)
   .fetch({ type: ['carrier'] })
   .then(phone_number => {
     console.log('phone_number')
