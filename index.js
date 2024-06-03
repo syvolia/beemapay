@@ -88,8 +88,8 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
 });
 const apiAuthorize = async () => {
 
-  let CONSUMERKEY ="982K90XZ95Ut0VX4k1008E11hwkvUm";
-  let CONSUMERSECRET = "FnJe8pdz81q5T7YfwZm5PJ0LnZYMf22iaSM74wIsygi8No8Q8t";
+  let consumerkey = process.env.CONSUMERKEY;
+  let consumersecret = process.env.CONSUMERSECRET;
 
 
 
@@ -97,8 +97,8 @@ const apiAuthorize = async () => {
     const response = await axios.post(
       " https://test.hallopay.co.ke/api/v2/token",
       {
-        consumerkey: CONSUMERKEY,
-        consumersecret: CONSUMERSECRET,
+        consumerkey: consumerkey,
+        consumersecret: consumersecret,
     
       },
    
@@ -120,10 +120,10 @@ const checkCarrier = async (req_data) => {
   var phoneNumber = req_data.recipient;
   console.log(phoneNumber);
 
-  let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
-  let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
-  const accountSid = TWILIO_ACCOUNT_SID;
-  const authToken = TWILIO_AUTH_TOKEN;
+  let Twilioaccountsid = process.env.TWILIO_ACCOUNT_SID;
+  let Twilioauthtoken= process.env.TWILIO_AUTH_TOKEN;
+  const accountSid = Twilioaccountsid;
+  const authToken = Twilioauthtoken;
   const client = require('twilio')(accountSid, authToken);
 
   client.lookups.v2.phoneNumbers(phoneNumber)
