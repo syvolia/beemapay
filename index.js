@@ -6,14 +6,16 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const axios = require("axios");
 const Transaction = require("./models/transactionModel");
-const twilio = require('twilio');
+const { checkMobileCarrier } = require("./carrierChecker");
 const port = process.env.PORT;
 
 app.listen(port, () => {
   console.log(`app is running on localhost:${port}`);
 });
 mongoose
-  .connect("mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority")
+  .connect(
+    "mongodb+srv://beemapaysy:josephsy27@cluster0.wwcjrpz.mongodb.net/?retryWrites=true&w=majority"
+  )
   .then(() => console.log("connected to db successfully"))
   .catch((err) => console.log(err));
 
@@ -22,7 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //Testing API
-app.get('/getIntroMessage', (req, res) => res.json({message: 'Welcome to Beempay API!'}));
+app.get("/getIntroMessage", (req, res) =>
+  res.json({ message: "Welcome to Beempay API!" })
+);
 
 //STEP 1 getting access token
 
@@ -43,7 +47,7 @@ const getAccessToken = async (req, res, next) => {
     .then((res) => {
       //   resp.status(200).json(res.data);
       token = res.data.access_token;
-       console.log(token);
+      console.log(token);
       next();
     })
     .catch((err) => {
@@ -53,12 +57,10 @@ const getAccessToken = async (req, res, next) => {
 
 //STEP 2 //registerUrl
 app.post("/registerUrl", getAccessToken, async (req, res) => {
-
   const shortCode = process.env.MPESA_PAYBILL;
 
   const validation = process.env.VALIDATION_URL;
   const confirmation = process.env.CONFIRMATION_URL;
-
 
   await axios
     .post(
@@ -66,9 +68,8 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
       {
         ShortCode: shortCode,
         ResponseType: "Completed",
-        ConfirmationURL: confirmation ,
-        ValidationURL: validation ,
-
+        ConfirmationURL: confirmation,
+        ValidationURL: validation,
       },
       {
         headers: {
@@ -87,117 +88,83 @@ app.post("/registerUrl", getAccessToken, async (req, res) => {
     });
 });
 
-// Twilio credentials from the console
-const accountSid = 'AC68f5b71bed0a2b87d23d1fdf9a22bcf9'; // Your Account SID from www.twilio.com/console
-const authToken = '1bc973ac83f97a9032be790016a46af3';   // Your Auth Token from www.twilio.com/console
-
-//check mobile number carrier
-const client = twilio(accountSid, authToken);
-async function checkCarrier(phoneNumber) {
-  console.log("testing carrierrrr");
-  console.log(phoneNumber)
-  console.log('phoneNumber1')
-  try {
-    const response = await client.lookups.v2.phoneNumbers(phoneNumber)
-      .fetch({type: 'carrier'});
-    console.log('Carrier Information:', response.carrier);
-  } catch (error) {
-    console.error('Error fetching carrier information:', error);
-  }
-}
-// const checkCarrier = async (req_data) => {
-//   console.log("testing carrierrrr");
-//   console.log(req_data);
-//   console.log("+++++++++++++++====>>>>",req_data);
-//   // const recipients = [];
-//   var phoneNumber = req_data.recipient;
-//   console.log(phoneNumber);
-//   console.log('phoneNumber1')
-
-//   let TWILIO_ACCOUNT_SID ="AC6deac11a6995240209a8b3879026d045";
-//   let TWILIO_AUTH_TOKEN ="1d053b6a0111468b1aac84b9fad66177";
-//   const accountSid = TWILIO_ACCOUNT_SID;
-//   const authToken = TWILIO_AUTH_TOKEN;
-//   const client = require('twilio')(accountSid, authToken);
-
-//   client.lookups.v2.phoneNumbers(phoneNumber)
-//   console.log('phoneNumber2')
-//   console.log(phoneNumber)
-//   .fetch({ type: ['carrier'] })
-//   .then(phone_number => {
-//     console.log('phone_number')
-//      console.log(phone_number) // All of the carrier info.
-//     // console.log(phone_number.carrier.name) // Just the carrier name.
-//     return phone_number.carrier.name;
-//   });
-//   if (phone_number.carrier.name="Safaricom") {
-//     return "SAFCOM";
-// } else if (phone_number.carrier.name="Airtel") {
-//     return "AIRTEL";
-// } else if (phone_number.carrier.name="Telkom") {
-//     return "TELKOM";
-// } else {
-//     return "Unknown Carrier";
-// }
-// }
-
 // a function to send airtime
 const sendAirtime = async (req_data) => {
   console.log("testing airtime");
   console.log(req_data);
-  console.log("+++++++++++++++====>>>>",req_data);
-  const recipients = [];
-  var recipient = req_data;
-  recipients.push(recipient);
-  console.log(recipient);
+  console.log("+++++++++++++++====>>>>", req_data);
+  // const recipients = [];
+  // var recipient = req_data;
+  // recipients.push(recipient);
+  const phoneNumber = req_data.recipient;
+  const amount = req_data.amount;
+  const carrier = checkMobileCarrier(phoneNumber);
+  console.log(`Carrier: ${carrier}, Phone number: ${phoneNumber}`);
 
-  let APP_KEY ="1d4dfa41-6113-47cc-9814-47df3c0481de";
-  let APP_TOKEN ="2T9dyw9uA307DljBId5v8estFt0DqhbN";
+  let APP_KEY = "1d42eHTsv3Lxd62cZUFONICtM126ZHpHEzHmCbXcCzM";
+  let APP_USERNAME = "beema";
 
   try {
     const response = await axios.post(
-      "https://quicksms.advantasms.com/api/v3/airtime/send",
+      "https://frfvend.dealerspace.africa:2053/v3/airtimebuypinless",
       {
-        recipients: recipients
+        operator: carrier, // Carrier (operator)
+        amount: amount, // Airtime amount
+        phoneNumber: phoneNumber, // Phone number
+        key: APP_KEY, // API key
+        username: APP_USERNAME, // Username for authentication
       },
       {
         headers: {
-          'Content-Type': 'application/json',
-          'App-Key': APP_KEY,
-          'App-Token': APP_TOKEN
+          "Content-Type": "application/json",
         },
       }
     );
 
-    console.log("+++++++++++++++++++++=====>>>:::",response.data);
+    console.log("+++++++++++++++++++++=====>>>:::", response.data);
     return response.data;
   } catch (err) {
     console.log(err.message);
     throw err;
   }
-}
+};
 //STEP 3 confirmation url
 const confirmation = process.env.CONFIRMATION_URL;
 app.post(`/confirmation`, (req, res) => {
-  console.log("am testing new changes")
-  console.log(res)
-  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-  console.log(req)
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body",req.body)
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::::::::req.body.Body",req.body.Body)
+  console.log("am testing new changes");
+  console.log(res);
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  console.log(req);
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body",
+    req.body
+  );
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::::::::req.body.Body",
+    req.body.Body
+  );
   //if (!req.body.Body.stkCallback.CallbackMetadata) {
-   // console.log(req.body.Body.stkCallback.ResultDesc);
-    //res.status(200).json("ok");
-   // return;
+  // console.log(req.body.Body.stkCallback.ResultDesc);
+  //res.status(200).json("ok");
+  // return;
   //}
-  console.log(">>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+  console.log(">>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
   const amount = req.body.TransAmount;
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>amount",amount)
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>amount",
+    amount
+  );
   const code = req.body.TransID;
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>code",code)
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>code",
+    code
+  );
   const phone1 = req.body.BillRefNumber;
 
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,phone1",phone1)
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,phone1",
+    phone1
+  );
   const phone = phone1;
   // saving the transaction to db
   console.log({
@@ -207,28 +174,25 @@ app.post(`/confirmation`, (req, res) => {
   });
   const transaction = new Transaction();
 
-transaction.customer_number = phone;
-transaction.mpesa_ref = code;
-transaction.amount = amount;
+  transaction.customer_number = phone;
+  transaction.mpesa_ref = code;
+  transaction.amount = amount;
 
-transaction
-  .save()
-  .then((data) => {
+  transaction.save().then((data) => {
     console.log({ message: "transaction saved successfully", data });
     var req_data = {
       recipient: transaction.customer_number,
-      amount: transaction.amount
+      amount: transaction.amount,
     };
-  var phoneNumber = transaction.customer_number
-   sendAirtime(req_data)
-   checkCarrier('+254704110586')
-  .then((responseData) => {
-    console.log(responseData);
-    res.status(200).json("ok");
-  })
-  .catch((error) => {
-    console.log(error);
-    res.status(400).json(error);
+    var phoneNumber = transaction.customer_number;
+    sendAirtime(req_data)
+      .then((responseData) => {
+        console.log(responseData);
+        res.status(200).json("ok");
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
+      });
   });
-
-})})
+});
