@@ -109,11 +109,11 @@ const sendAirtime = async (req_data) => {
     const response = await axios.post(
       "https://frfvend.dealerspace.africa:2053/v3/airtimebuypinless",
       {
+        username: APP_USERNAME, // Username for authentication
         operator: carrier, // Carrier (operator)
         amount: amount, // Airtime amount
-        phoneNumber: phoneNumber, // Phone number
+        mobileno: phoneNumber, // Phone number
         key: APP_KEY, // API key
-        username: APP_USERNAME, // Username for authentication
       },
       {
         headers: {
