@@ -97,7 +97,8 @@ const sendAirtime = async (req_data) => {
   // var recipient = req_data;
   // recipients.push(recipient);
   const phoneNumber = req_data.recipient;
-  const amount = req_data.amount;
+  const rawAmount = req_data.amount;
+  const amount = Math.floor(parseFloat(rawAmount));
   const carrier = checkMobileCarrier(phoneNumber);
   console.log(`Carrier: ${carrier}, Phone number: ${phoneNumber}`);
 
