@@ -102,7 +102,7 @@ const sendAirtime = async (req_data) => {
   const carrier = checkMobileCarrier(phoneNumber);
   console.log(`Carrier: ${carrier}, Phone number: ${phoneNumber}`);
 
-  let APP_KEY = "1d42eHTsv3Lxd62cZUFONICtM126ZHpHEzHmCbXcCzM";
+  let APP_KEY = "ZlweS2c87QicKJ3RYyqwdV1zz7gtY3aRL2MNxrPMK4Q";
   let APP_USERNAME = "beema";
 
   try {
